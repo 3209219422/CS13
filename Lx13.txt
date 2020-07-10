@@ -1,0 +1,83 @@
+C#企业级开发技术练习13答题卡
+
+班级：     
+姓名：     
+学号：     
+
+注：请将答案放置在序号下方。*/
+
+（一）using System;
+using System.Collections.Generic;
+using System.Threading;
+
+namespace ConsoleApp4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var scores = new List<(string name, decimal cs, decimal sql)>
+            {
+                ("zhang",80,92),
+                ("liu",57,68),
+                ("wang",61,72),
+                ("zhao",95,96)
+            };
+            decimal s1 = 0, s2 = 0;
+            Thread sumCS = new Thread(t => {
+                foreach (var score in scores)
+                {
+                    s1 += score.cs;
+                    Thread.Sleep((int)t);
+                }
+            });
+            sumCS.Start(20);
+            sumCS.Start(8);
+            decimal avgl = s1 / scores.Count, avg2 = s2 / scores.Count;
+            Console.WriteLine($"cs平均分:{avgl},sql平均分:{avg2}");
+        }
+    }
+}
+
+
+（二）sing System;
+using System.IO;
+using System.Threading;
+
+namespace ConsoleApp4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            AutoResetEvent aeFile = new AutoResetEvent(false);
+            string file = @"d:\homeDir\homeThStm.txt";
+            Thread writeTh = new Thread(() =>
+            {
+                using (StreamWriter sw = new StreamWriter(file))
+                {
+                    sw.WriteLine("一帆风顺吉星到"); Thread.Sleep(100);
+                    sw.WriteLine("万事如意福临门"); Thread.Sleep(100);
+                }
+            });
+            Thread thread = new Thread(() =>
+            {
+                aeFile.WaitOne();
+                using (StreamReader sr = new StreamReader(file))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        Console.WriteLine(line);
+                    }
+                }
+            });
+            writeTh.Abort(); 
+            }
+    }
+}
+
+
+
+
+                                                                                                                                                                                               
